@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<body>
+			<% if @scanned_products.present? %>
+				<ul>
+					<% @scanned_products.each do |product| %>
+						<li>
+							<span><%= product.name %>&nbsp;<%= product.price %></span></li>
+					<%end%>
+				</ul>
+			<%end%>
+			<form>
+				<input type="button" value="Print this page" onClick="window.print()">
+			</form>
+		</body>
+	</head>
+</html>

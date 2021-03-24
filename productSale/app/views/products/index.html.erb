@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/assets/jquery.scannerdetection.js"></script>
+		<script type="text/javascript">
+
+			$(window).ready(function(){
+				//$("#bCode").scannerDetection();
+
+				$(document).scannerDetection({
+					timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+					startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
+					endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+					avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+					onComplete: function(barcode, qty){}, // main callback function	
+					//Figuring out start and end characters
+					onKeyDetect: function(event){console.log(event.which); return false;} 
+				});
+				
+				$(window).bind('scannerDetectionComplete',function(e,data){
+			            console.log('complete '+data.string);
+			            $("#bCode").val(data.string);
+		        })
+		        .bind('scannerDetectionError',function(e,data){
+		            console.log('detection error '+data.string);
+		        })
+		        .bind('scannerDetectionReceive',function(e,data){
+		            console.log('Recieve');
+		            console.log(data.evt.which);
+		        })
+		        .bind('scanButtonKeyCode', function(e,data){
+		        	if(data == 13){
+		        		$.ajax({
+		                	type: "GET",
+		                	url:  "/products/scanned_products",
+		            	}).done(function (msg) {
+		            	});	
+		        	}
+		        })
+
+		        //$(window).scannerDetection('success');
+		    });
+		</script>
+		<script>
+			$('#bCode').change(function () {
+	            var id = $(this).val();
+	            $.ajax({
+	                type: "GET",
+	                url:  "/products/fetch_product",
+	                data: {'bcode': id}
+	            }).done(function (msg) {
+	            });
+	        });
+	        $(document).ready(function(){
+		        $("button").click(function () {
+		        	$.ajax({
+		                type: "GET",
+		                url:  "/products/scanned_products",
+		            }).done(function (msg) {
+		            });
+		        });
+	    	});
+		</script>
+		<body>
+			<input id='bCode'type='text' value='barcode appears here'/>
+			<button id="close_btn">Quit</button>
+		</body>
+	</head>
+</html>

@@ -1,0 +1,11 @@
+<html>
+	<head>
+		<body>
+			<% if @product.present? %>
+				<li><span> <%= @product.name %> &nbsp; <%= @product.price %> </span></li>
+			<%else%>
+				<li><span><%= @message %></span></li>
+			<%end%>
+		</body>
+	</head>
+</html>
